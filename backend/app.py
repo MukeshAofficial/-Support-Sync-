@@ -13,6 +13,8 @@ from flask_cors import CORS
 import requests
 from sarvamai import SarvamAI
 from sarvamai.play import save
+from twilio.rest import Client
+import traceback
 
 load_dotenv()
 
@@ -199,6 +201,30 @@ def upload_file():
     process_pdf(filepath)
 
     return jsonify({"success": True})
+
+TWILIO_ACCOUNT_SID ="ACff7c23863603fea66fcb9b52b5a09a7b"
+TWILIO_AUTH_TOKEN =  "d6e66e68f8831a5687ae14174255c36c"
+TWILIO_NUMBER = os.getenv("TWILIO_NUMBER", "+18565654145")
+
+@app.route("/api/call", methods=["POST"])
+def make_call():
+    data = request.get_json() or request.form
+    to_number = data.get("to_number")
+    content = data.get("content", "Hello")
+    if not to_number:
+        return jsonify({"error": "Missing 'to_number'"}), 400
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    try:
+        call = client.calls.create(
+            to=to_number,
+            from_=TWILIO_NUMBER,
+            twiml=f'<Response><Say>{content}</Say></Response>'
+        )
+        return jsonify({"success": True, "call_sid": call.sid})
+    except Exception as e:
+        print("Exception in /api/call endpoint:")
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

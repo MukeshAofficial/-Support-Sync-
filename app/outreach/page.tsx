@@ -95,12 +95,12 @@ export default function ContactUploader() {
   const [isOutreachActive, setIsOutreachActive] = useState(false)
   const [activeTab, setActiveTab] = useState<string>("import")
 
-  // Auto-progress tabs based on completion
-  useEffect(() => {
-    if (contacts.length > 0 && activeTab === "import") {
-      setActiveTab("template")
-    }
-  }, [contacts, activeTab])
+  // Remove auto-progress to template tab
+  // useEffect(() => {
+  //   if (contacts.length > 0 && activeTab === "import") {
+  //     setActiveTab("template")
+  //   }
+  // }, [contacts, activeTab])
 
   useEffect(() => {
     if (selectedTemplate && activeTab === "template") {
@@ -198,10 +198,32 @@ export default function ContactUploader() {
     return template.content.replace(/{name}/g, sampleContact.name).replace(/{company}/g, sampleContact.company)
   }
 
-  const handleStartOutreach = () => {
+  // Initiate call to the first contact only
+  const handleStartOutreach = async () => {
     if (!selectedTemplate || contacts.length === 0) return
     setIsOutreachActive(true)
     setActiveTab("status")
+    // Prepare message for the first contact
+    const template = getSelectedTemplate()
+    const firstContact = contacts[0]
+    let message = template?.content || "Hello"
+    message = message.replace(/{name}/g, firstContact.name).replace(/{company}/g, firstContact.company)
+    if (customMessage) message += "\n" + customMessage
+    // Call backend to initiate call
+    try {
+      const res = await fetch("http://localhost:5000/api/call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to_number: firstContact.phone,
+          content: message,
+        }),
+      })
+      const data = await res.json()
+      if (!data.success) setError(data.error || "Failed to initiate call.")
+    } catch (err) {
+      setError("Failed to initiate call.")
+    }
   }
 
   const themeClasses = {
@@ -592,6 +614,29 @@ export default function ContactUploader() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
+                    <div className="mb-6">
+                      <h3 className={`text-lg font-semibold mb-2 ${themeClasses.text}`}>Contact List</h3>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full border text-sm">
+                          <thead>
+                            <tr className={themeClasses.accentBg}>
+                              <th className="px-4 py-2 border">Name</th>
+                              <th className="px-4 py-2 border">Phone</th>
+                              <th className="px-4 py-2 border">Company</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {contacts.map((c, i) => (
+                              <tr key={i}>
+                                <td className="px-4 py-2 border">{c.name}</td>
+                                <td className="px-4 py-2 border">{c.phone}</td>
+                                <td className="px-4 py-2 border">{c.company}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                     <div className={`text-center py-8 ${themeClasses.accentBg} rounded-lg ${themeClasses.border}`}>
                       <Activity className={`h-12 w-12 mx-auto mb-4 ${themeClasses.textMuted} animate-pulse`} />
                       <p className={`${themeClasses.text} font-medium mb-2`}>Campaign in Progress</p>
