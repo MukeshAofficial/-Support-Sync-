@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
+import { Menu, X, ChevronDown } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient"
 
 export default function Navigation() {
@@ -46,6 +46,22 @@ export default function Navigation() {
             <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
               Features
             </Link>
+            {/* Tools Dropdown */}
+            <div className="relative group">
+              <button className="flex items-center text-gray-600 hover:text-gray-900 transition-colors px-2 py-2 rounded-lg hover:bg-gray-50">
+                Tools <ChevronDown className="w-4 h-4 ml-1" />
+              </button>
+              <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all z-50">
+                <div className="py-2">
+                  <Link href="/bot" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">AI Customer Support</Link>
+                  <Link href="/outreach" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">AI Outreach Automation</Link>
+                  <Link href="/lead" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">Analyze Your Leads</Link>
+                  <Link href="/code" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">Understand Your Code</Link>
+                  <Link href="/content" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">Content Generator</Link>
+                  {/* Add more tools/features here as needed */}
+                </div>
+              </div>
+            </div>
             <Link href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors">
               Pricing
             </Link>
@@ -100,6 +116,15 @@ export default function Navigation() {
               <Link href="#features" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
                 Features
               </Link>
+              {/* Tools Dropdown for Mobile */}
+              <div className="border-t pt-2">
+                <div className="font-semibold text-gray-700 mb-1">Tools</div>
+                <Link href="/bot" className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">AI Customer Support</Link>
+                <Link href="/outreach" className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">AI Outreach Automation</Link>
+                <Link href="/lead" className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">Analyze Your Leads</Link>
+                <Link href="/code" className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">Understand Your Code</Link>
+                <Link href="/content" className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">Content Generator</Link>
+              </div>
               <Link href="#pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
                 Pricing
               </Link>
