@@ -9,3 +9,4 @@ chromadb
 PyPDF2
 pypdf
 gunicorn
+sarvamai
