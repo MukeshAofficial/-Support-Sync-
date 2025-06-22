@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Brain, Phone, Upload, Bot, MessageSquare, BarChart3 } from "lucide-react"
+import { Brain, Phone, Upload, Bot, MessageSquare, BarChart3, UserCheck, Code2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export default function Features() {
@@ -48,6 +48,28 @@ export default function Features() {
         "Track engagement and conversion rates",
       ],
       onClick: () => router.push("/outreach"),
+    },
+    {
+      icon: UserCheck,
+      title: "Analyze Your Leads",
+      description: "Upload LinkedIn profiles and get instant AI-powered lead analysis.",
+      details: [
+        "Upload CSV with Name, LinkedIn, Company",
+        "Get product-fit and domain relevance insights",
+        "Custom prompts for tailored analysis",
+      ],
+      onClick: () => router.push("/lead"),
+    },
+    {
+      icon: Code2,
+      title: "Understand Your Code",
+      description: "Chat with your codebase and get instant explanations.",
+      details: [
+        "Ask questions about your code",
+        "Supports multiple languages and frameworks",
+        "Navigate and understand large codebases",
+      ],
+      onClick: () => router.push("/code"),
     },
   ]
 
